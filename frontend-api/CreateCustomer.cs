@@ -13,6 +13,7 @@ namespace frontend_api
     public static class CreateCustomer
     {
         [FunctionName("CreateCustomer")]
+        [return: ServiceBus("customerqueue", Connection = "CustomerServiceBus")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
@@ -29,7 +30,7 @@ namespace frontend_api
                 ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
                 : $"Hello, {name}. This HTTP triggered function executed successfully.";
 
-            return new OkObjectResult(responseMessage);
+            return responseMessage;
         }
     }
 }
