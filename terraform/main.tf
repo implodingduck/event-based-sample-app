@@ -151,3 +151,21 @@ module "func" {
       }
   ]
 }
+
+module "eventapi" {
+  source = "github.com/implodingduck/tfmodules//functionapp"
+  func_name = "api${local.func_name}"
+  resource_group_name = azurerm_resource_group.rg.name
+  resource_group_location = azurerm_resource_group.rg.location
+  working_dir = "../event-api"
+  app_settings = {
+    "FUNCTIONS_WORKER_RUNTIME" = "dotnet"
+    "CustomerServiceBus" = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.kv.name};SecretName=${azurerm_key_vault_secret.sbcustomercs.name})"
+  }
+  app_identity = [
+      {
+          type = "SystemAssigned"
+          identity_ids = null
+      }
+  ]
+}
