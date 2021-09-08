@@ -81,25 +81,24 @@ resource "azurerm_key_vault_access_policy" "sp" {
 }
 
 
-resource "azurerm_key_vault_access_policy" "as" {
-  for_each = toset([
-    module.func.identity_principal_id,
-    module.eventapi.identity_principal_id,
-  ])
-  key_vault_id = azurerm_key_vault.kv.id
-  tenant_id = data.azurerm_client_config.current.tenant_id
-  object_id = each.key
+# resource "azurerm_key_vault_access_policy" "as" {
+#   for_each = toset([
+#     module.func.identity_principal_id
+#   ])
+#   key_vault_id = azurerm_key_vault.kv.id
+#   tenant_id = data.azurerm_client_config.current.tenant_id
+#   object_id = each.key
   
-  key_permissions = [
-    "get",
-  ]
+#   key_permissions = [
+#     "get",
+#   ]
 
-  secret_permissions = [
-    "get",
-    "list"
-  ]
+#   secret_permissions = [
+#     "get",
+#     "list"
+#   ]
   
-}
+# }
 
 
 resource "azurerm_servicebus_namespace" "customer" {
