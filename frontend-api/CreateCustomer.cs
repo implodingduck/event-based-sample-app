@@ -8,6 +8,7 @@ using Microsoft.Azure.ServiceBus;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace frontend_api
 {
@@ -15,22 +16,42 @@ namespace frontend_api
     {
         [FunctionName("CreateCustomer")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "customer")] HttpRequest req,
             [ServiceBus("customerqueue", Connection = "CustomerServiceBus")] IAsyncCollector<string> output,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            string name = req.Query["name"];
-
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
+            string firstName = data?.firstName;
+            string lastName = data?.lastName;
+            string email = data?.email;
 
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
-            await output.AddAsync(responseMessage);
+            List<string> errors = new List<string>();
+
+            if (string.IsNullOrEmpty(firstName) ) 
+            {
+                errors.Add("First name is required");
+            }
+            if (string.IsNullOrEmpty(lastName) ) 
+            {
+                errors.Add("Last name is required");
+            }
+            if (string.IsNullOrEmpty(email) ) 
+            {
+                errors.Add("Email is required");
+            }
+            if (errors.Length > 0){
+                return new BadRequestObjectResult(errors);
+            }
+            JObject json = JObject.FromObject(new
+            {
+                firstName = firstName,
+                lastName = lastName,
+                email = email
+            });
+            await output.AddAsync(json.ToString());
             
             var result = new ObjectResult(responseMessage);
             result.StatusCode = 200;
