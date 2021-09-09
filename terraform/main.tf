@@ -174,6 +174,9 @@ module "eventapi" {
   app_settings = {
     "FUNCTIONS_WORKER_RUNTIME" = "dotnet"
     "CustomerServiceBus" = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.kv.name};SecretName=${azurerm_key_vault_secret.sbcustomercs.name})"
+    "CosmosDBConnection" = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.kv.name};SecretName=${azurerm_key_vault_secret.cosmosdbcs.name})"
+    "CosmosDBDatabase"   = azurerm_cosmosdb_account.db.name
+    "ComsosDBCollection" = "customers"
   }
   app_identity = [
       {
@@ -181,4 +184,46 @@ module "eventapi" {
           identity_ids = null
       }
   ]
+}
+
+resource "azurerm_cosmosdb_account" "db" {
+  name                = "${local.func_name}-dba"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  offer_type          = "Standard"
+  consistency_policy {
+    consistency_level       = "Session"
+  }
+  tags         = {
+    "managed_by" = "terraform"
+  }
+}
+
+resource "azurerm_cosmosdb_sql_database" "db" {
+  name                = "${local.func_name}-db"
+  resource_group_name = azurerm_cosmosdb_account.db.resource_group_name
+  account_name        = azurerm_cosmosdb_account.db.name
+  throughput          = 400
+}
+
+resource "azurerm_cosmosdb_sql_container" "db" {
+  name                  = "customers"
+  resource_group_name   = azurerm_cosmosdb_account.db.resource_group_name
+  account_name          = azurerm_cosmosdb_account.db.name
+  database_name         = azurerm_cosmosdb_sql_database.db.name
+  partition_key_path    = "/id"
+  partition_key_version = 1
+  throughput            = 400
+}
+
+resource "azurerm_key_vault_secret" "cosmosdbcs" {
+  depends_on = [
+    azurerm_key_vault_access_policy.sp
+  ]
+  name         = "cosmosdbcs"
+  value        = azurerm_cosmosdb_account.db.connection_strings.0 
+  key_vault_id = azurerm_key_vault.kv.id
+  tags         = {
+    "managed_by" = "terraform"
+  }
 }

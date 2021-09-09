@@ -51,7 +51,8 @@ namespace frontend_api
             {
                 firstName = firstName,
                 lastName = lastName,
-                email = email
+                email = email,
+                guid = Guid.NewGuid()
             });
             await output.AddAsync(json.ToString());
             
