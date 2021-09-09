@@ -26,6 +26,7 @@ namespace event_api
                 lastname = data.lastname, 
                 email = data.email
             };
+            
             log.LogInformation($"Hopefully {data.firstName} {data.lastName} is now in cosmos");
         }
     }
