@@ -80,6 +80,7 @@ stages:
             export ARM_CLIENT_SECRET=$servicePrincipalKey
             export ARM_TENANT_ID=$tenantId
             mv ../frontend-api/local.settings.json.sample ../frontend-api/local.settings.json
+            mv ../event-api/local.settings.json.sample ../event-api/local.settings.json
             terraform apply -auto-approve theplan
         env:
           TF_VAR_subscription_id: $(subscription-id)
