@@ -23,7 +23,7 @@ namespace event_api
             document = new { 
                 id = data.guid, 
                 firstName = data.firstName, 
-                lastname = data.lastname, 
+                lastName = data.lastName, 
                 email = data.email
             };
 
