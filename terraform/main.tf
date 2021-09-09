@@ -194,6 +194,15 @@ resource "azurerm_cosmosdb_account" "db" {
   consistency_policy {
     consistency_level       = "Session"
   }
+  geo_location {
+    location          = "West US"
+    failover_priority = 1
+  }
+
+  geo_location {
+    location          = azurerm_resource_group.rg.location
+    failover_priority = 0
+  }
   tags         = {
     "managed_by" = "terraform"
   }
