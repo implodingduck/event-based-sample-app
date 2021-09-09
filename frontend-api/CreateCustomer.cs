@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -42,7 +44,7 @@ namespace frontend_api
             {
                 errors.Add("Email is required");
             }
-            if (errors.Length > 0){
+            if (errors.Count > 0){
                 return new BadRequestObjectResult(errors);
             }
             JObject json = JObject.FromObject(new
@@ -53,7 +55,7 @@ namespace frontend_api
             });
             await output.AddAsync(json.ToString());
             
-            var result = new ObjectResult(responseMessage);
+            var result = new ObjectResult(json.ToString());
             result.StatusCode = 200;
             return result;
         }
