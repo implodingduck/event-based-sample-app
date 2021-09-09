@@ -15,7 +15,7 @@ namespace event_api
             [CosmosDB(
                 databaseName: "%CosmosDBDatabase%",
                 collectionName: "%ComsosDBCollection%",
-                ConnectionStringSetting = "CosmosDBConnection")]out dynamic document,
+                ConnectionStringSetting = "CosmosDBConnection")] out dynamic document,
             ILogger log)
         {
             log.LogInformation($"C# ServiceBus queue trigger function processed message: {myQueueItem}");
@@ -26,7 +26,7 @@ namespace event_api
                 lastname = data.lastname, 
                 email = data.email
             };
-            
+
             log.LogInformation($"Hopefully {data.firstName} {data.lastName} is now in cosmos");
         }
     }

@@ -175,7 +175,7 @@ module "eventapi" {
     "FUNCTIONS_WORKER_RUNTIME" = "dotnet"
     "CustomerServiceBus" = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.kv.name};SecretName=${azurerm_key_vault_secret.sbcustomercs.name})"
     "CosmosDBConnection" = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.kv.name};SecretName=${azurerm_key_vault_secret.cosmosdbcs.name})"
-    "CosmosDBDatabase"   = azurerm_cosmosdb_account.db.name
+    "CosmosDBDatabase"   = azurerm_cosmosdb_sql_database.db.name
     "ComsosDBCollection" = "customers"
   }
   app_identity = [
