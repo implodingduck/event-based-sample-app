@@ -7,7 +7,7 @@ using Microsoft.Azure.EventHubs;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-
+using Newtonsoft.Json.Linq;
 namespace event_api
 {
     public static class ProcessB2CAuditHub
@@ -26,12 +26,12 @@ namespace event_api
                 {
                     string messageBody = Encoding.UTF8.GetString(eventData.Body.Array, eventData.Body.Offset, eventData.Body.Count);
                     dynamic data = JsonConvert.DeserializeObject(messageBody);
-                    List<dynamic> records = data.records;
-                    foreach (dynamic record in records)
+                    JArray records = data.records;
+                    foreach (JObject record in records)
                     {
-                        if ( "Add User".Equals(record?.operationName)){
+                        if ( "Add User".Equals(record.GetValue("operationName"))){
                             log.LogInformation("Found an add user operation");
-                            log.LogInformation($"C# Event Hub trigger function processed a message: {record}");
+                            log.LogInformation($"C# Event Hub trigger function processed a message: {record.ToString()}");
                         }
                     }
                     // Replace these two lines with your processing logic.

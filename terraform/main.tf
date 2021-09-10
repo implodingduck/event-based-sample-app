@@ -30,6 +30,9 @@ data "azurerm_client_config" "current" {}
 resource "azurerm_resource_group" "rg" {
   name     = "rg-eventbased-sampleapp-${random_string.unique.result}"
   location = var.location
+  tags = {
+    "managed_by" = "terraform"
+  }
 }
 
 resource "random_string" "unique" {
@@ -47,7 +50,9 @@ resource "azurerm_key_vault" "kv" {
   soft_delete_retention_days = 7
   purge_protection_enabled = false
 
-  
+  tags = {
+    "managed_by" = "terraform"
+  }
 }
 
 resource "azurerm_key_vault_access_policy" "sp" {
@@ -56,28 +61,27 @@ resource "azurerm_key_vault_access_policy" "sp" {
   object_id = data.azurerm_client_config.current.object_id
   
   key_permissions = [
-    "create",
-    "get",
-    "purge",
-    "recover",
-    "delete"
+    "Create",
+    "Get",
+    "Purge",
+    "Recover",
+    "Delete"
   ]
 
   secret_permissions = [
-    "set",
-    "purge",
-    "get",
-    "list"
+    "Set",
+    "Purge",
+    "Get",
+    "List"
   ]
 
   certificate_permissions = [
-    "purge"
+    "Purge"
   ]
 
   storage_permissions = [
-    "purge"
+    "Purge"
   ]
-  
 }
 
 
