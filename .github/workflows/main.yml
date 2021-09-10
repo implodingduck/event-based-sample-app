@@ -43,17 +43,14 @@ jobs:
           secrets: 'container-name, resource-group-name, storage-account-name, subscription-id'  # comma separated list of secret keys that need to be fetched from the Key Vault 
         id: kvAction
 
-      - name: Azure CLI Action
-        uses: Azure/cli@1.0.4
+      - name: do terraform
         env:
           TF_VARS_container_name: ${{ steps.kvAction.outputs.container-name }}
           TF_VARS_resource_group_name: ${{ steps.kvAction.outputs.resource-group-name }}
           TF_VARS_storage_account_name: ${{ steps.kvAction.outputs.storage-account-name }}
           TF_VARS_subscription_id: ${{ steps.kvAction.outputs.subscription_id }}
           TF_VARS_key: $GITHUB_REPOSITORY.tfstate
-        with:
-          # Specify the script here
-          inlineScript: |
+        run: |
             echo "starting..."
             cd terraform
             ./env_setup.sh
