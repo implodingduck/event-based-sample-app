@@ -48,6 +48,7 @@ jobs:
           ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ steps.kvAction.outputs.subscription-id }}
           TF_VARS_container_name: ${{ steps.kvAction.outputs.container-name }}
           TF_VARS_resource_group_name: ${{ steps.kvAction.outputs.resource-group-name }}
           TF_VARS_storage_account_name: ${{ steps.kvAction.outputs.storage-account-name }}
