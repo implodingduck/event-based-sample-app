@@ -16,7 +16,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  terraform:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -45,6 +45,9 @@ jobs:
 
       - name: do terraform
         env:
+          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
           TF_VARS_container_name: ${{ steps.kvAction.outputs.container-name }}
           TF_VARS_resource_group_name: ${{ steps.kvAction.outputs.resource-group-name }}
           TF_VARS_storage_account_name: ${{ steps.kvAction.outputs.storage-account-name }}
@@ -52,7 +55,10 @@ jobs:
           TF_VARS_key: $GITHUB_REPOSITORY.tfstate
         run: |
             echo "starting..."
+            cp event-api/local.settings.json.sample event-api/local.settings.json
+            cp frontend-api/local.settings.json.sample frontend-api/local.settings.json
             cd terraform
             ./env_setup.sh
             terraform init --backend-config=backend.tfvars
+            terraform plan
 
