@@ -28,7 +28,7 @@ data "azurerm_client_config" "current" {}
 
 
 resource "azurerm_resource_group" "rg" {
-  name     = "rg-eventbased-sampleapp"
+  name     = "rg-eventbased-sampleapp-${random_string.unique.result}"
   location = var.location
 }
 
