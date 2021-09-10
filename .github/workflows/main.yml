@@ -25,6 +25,12 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
+      - name: Azure Login
+        uses: Azure/login@v1
+        with:
+          # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: HashiCorp - Setup Terraform
         # You may pin to the exact commit or the version.
         # uses: hashicorp/setup-terraform@d22444889af304a44b997011fbabb81ff705a7b4
