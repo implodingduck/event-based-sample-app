@@ -177,6 +177,8 @@ module "eventapi" {
     "CosmosDBConnection" = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.kv.name};SecretName=${azurerm_key_vault_secret.cosmosdbcs.name})"
     "CosmosDBDatabase"   = azurerm_cosmosdb_sql_database.db.name
     "ComsosDBCollection" = "customers"
+    "EventHubName"       = "b2caudit"
+    "EventHubConnection" = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.kv.name};SecretName=eventhubcs)"
   }
   app_identity = [
       {
