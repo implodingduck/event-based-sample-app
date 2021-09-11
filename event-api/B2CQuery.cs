@@ -60,12 +60,17 @@ namespace event_api
 
                 if (result != null)
                 {
-                    
-                    
+                    string email;
+                    foreach ( ObjectIdentity oi in result.Identities)
+                    {
+                        if (string.Equals("emailAddress", oi?.SignInType)){
+                            email = oi?.IssuerAssignedId;
+                        }
+                    }
                     log.LogInformation(JsonConvert.SerializeObject(responseMessage));
                     var retval = new {
                         displayName = result?.DisplayName,
-                        email = result?.Identities[0]?.IssuerAssignedId
+                        email = email
                     };
                     responseMessage = JsonConvert.SerializeObject(retval);
                     log.LogInformation(responseMessage);
