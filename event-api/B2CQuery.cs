@@ -54,7 +54,9 @@ namespace event_api
                     {
                         e.DisplayName,
                         e.Id,
-                        e.Identities
+                        e.Identities,
+                        e.GivenName,
+                        e.Surname
                     })
                     .GetAsync();
 
