@@ -16,6 +16,7 @@ namespace event_api
     public static class ProcessB2CAuditHub
     {
         private static GraphServiceClient graphClient;
+
         [FunctionName("ProcessB2CAuditHub")]
         public static async Task Run(
             [EventHubTrigger("%EventHubName%", Connection = "EventHubConnection")] EventData[] events, 
@@ -72,6 +73,21 @@ namespace event_api
                                 if (result != null)
                                 {
                                     log.LogInformation(JsonConvert.SerializeObject(result));
+                                    string email = "";
+                                    foreach ( ObjectIdentity oi in result.Identities)
+                                    {
+                                        if (string.Equals("emailAddress", oi?.SignInType)){
+                                            email = oi?.IssuerAssignedId;
+                                        }
+                                    }
+                                    var retval = new {
+                                        displayName = result?.DisplayName,
+                                        email = email,
+                                        firstName = result?.GivenName,
+                                        lastName =  result?.SurName,
+                                    };
+                                    
+                                    log.LogInformation(JsonConvert.SerializeObject(retval));
                                 }
                             }
                             catch (Exception ex)
@@ -80,8 +96,6 @@ namespace event_api
                             }
                         }
                     }
-                    
-                    // Replace these two lines with your processing logic.
                     
                     await Task.Yield();
                 }

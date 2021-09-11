@@ -70,7 +70,9 @@ namespace event_api
                     log.LogInformation(JsonConvert.SerializeObject(responseMessage));
                     var retval = new {
                         displayName = result?.DisplayName,
-                        email = email
+                        email = email,
+                        firstName = result?.GivenName,
+                        lastName =  result?.SurName,
                     };
                     responseMessage = JsonConvert.SerializeObject(retval);
                     log.LogInformation(responseMessage);
