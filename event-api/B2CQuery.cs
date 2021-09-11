@@ -70,6 +70,7 @@ namespace event_api
             catch (Exception ex)
             {
                 log.LogError(ex.Message);
+                responseMessage = ex.Message;
             }
             return new OkObjectResult(responseMessage);
         }
