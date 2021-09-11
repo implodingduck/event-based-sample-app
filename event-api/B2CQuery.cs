@@ -61,7 +61,13 @@ namespace event_api
                 if (result != null)
                 {
                     
-                    responseMessage = JsonConvert.SerializeObject(result);
+                    
+                    log.LogInformation(JsonConvert.SerializeObject(responseMessage));
+                    var retval = new {
+                        displayName = result?.DisplayName,
+                        email = result?.Identities[0]?.IssuerAssignedId
+                    };
+                    responseMessage = JsonConvert.SerializeObject(retval);
                     log.LogInformation(responseMessage);
                 }
             }
