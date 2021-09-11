@@ -51,36 +51,40 @@ namespace event_api
 
                                 // Set up the Microsoft Graph service client with client credentials
                                 graphClient = new GraphServiceClient(authProvider);
-                                JObject properties = (JObject)record["properties"];
-                                JArray targetResources = (JArray)properties["targetResources"];
-                                JObject targetResource = (JObject)targetResources[0];
-
-                                string userId = (string)targetResource["id"];
-                                try
-                                {
-                                    // Get user by object ID
-                                    var result = await graphClient.Users[userId]
-                                        .Request()
-                                        .Select(e => new
-                                        {
-                                            e.DisplayName,
-                                            e.Id,
-                                            e.Identities
-                                        })
-                                        .GetAsync();
-
-                                    if (result != null)
+                            }
+                            JObject properties = (JObject)record["properties"];
+                            log.LogInformation($"properties = {properties.ToString()}");
+                            JArray targetResources = (JArray)properties["targetResources"];
+                            log.LogInformation($"targetResources = {targetResources.ToString()}");
+                            JObject targetResource = (JObject)targetResources[0];
+                            log.LogInformation($"targetResource = {targetResource.ToString()}");
+                            string userId = (string)targetResource["id"];
+                            log.LogInformation($"userId = {targetResources.ToString()}");
+                            try
+                            {
+                                // Get user by object ID
+                                var result = await graphClient.Users[userId]
+                                    .Request()
+                                    .Select(e => new
                                     {
-                                        log.LogInformation(JsonConvert.SerializeObject(result));
-                                    }
-                                }
-                                catch (Exception ex)
+                                        e.DisplayName,
+                                        e.Id,
+                                        e.Identities
+                                    })
+                                    .GetAsync();
+
+                                if (result != null)
                                 {
-                                    log.LogError(ex.Message);
+                                    log.LogInformation(JsonConvert.SerializeObject(result));
                                 }
+                            }
+                            catch (Exception ex)
+                            {
+                                log.LogError(ex.Message);
                             }
                         }
                     }
+                    
                     // Replace these two lines with your processing logic.
                     
                     await Task.Yield();
