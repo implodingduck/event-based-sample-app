@@ -36,7 +36,7 @@ namespace event_api
                     {
                         string operationName = (string)record?["operationName"];
                         log.LogInformation($"OperationName: {operationName}");
-                        if ( "Add User".Equals(operationName)){
+                        if ( string.Equals("Add user", operationName, StringComparison.OrdinalIgnoreCase)){
                             log.LogInformation("Found an add user operation");
                             log.LogInformation($"C# Event Hub trigger function processed a message: {record.ToString()}");
                             if (graphClient == null)
