@@ -60,7 +60,7 @@ namespace event_api
 
                 if (result != null)
                 {
-                    string email;
+                    string email = "";
                     foreach ( ObjectIdentity oi in result.Identities)
                     {
                         if (string.Equals("emailAddress", oi?.SignInType)){
