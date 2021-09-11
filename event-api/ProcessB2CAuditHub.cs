@@ -8,10 +8,15 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+
+using Microsoft.Graph;
+using Microsoft.Graph.Auth;
+using Microsoft.Identity.Client;
 namespace event_api
 {
     public static class ProcessB2CAuditHub
     {
+        private static GraphServiceClient graphClient;
         [FunctionName("ProcessB2CAuditHub")]
         public static async Task Run(
             [EventHubTrigger("%EventHubName%", Connection = "EventHubConnection")] EventData[] events, 
@@ -32,6 +37,42 @@ namespace event_api
                         if ( "Add User".Equals(record.GetValue("operationName"))){
                             log.LogInformation("Found an add user operation");
                             log.LogInformation($"C# Event Hub trigger function processed a message: {record.ToString()}");
+                            if (graphClient == null)
+                            {                                
+                                // Initialize the client credential auth provider
+                                IConfidentialClientApplication confidentialClientApplication = ConfidentialClientApplicationBuilder
+                                    .Create(Environment.GetEnvironmentVariable("AppId"))
+                                    .WithTenantId(Environment.GetEnvironmentVariable("TenantId"))
+                                    .WithClientSecret(Environment.GetEnvironmentVariable("AppSecret"))
+                                    .Build();
+                                ClientCredentialProvider authProvider = new ClientCredentialProvider(confidentialClientApplication);
+
+                                // Set up the Microsoft Graph service client with client credentials
+                                graphClient = new GraphServiceClient(authProvider);
+                                string userId = record?.GetValue("properties")?.GetValue("targetResources")[0].GetValue("id");
+                                try
+                                {
+                                    // Get user by object ID
+                                    var result = await graphClient.Users[userId]
+                                        .Request()
+                                        .Select(e => new
+                                        {
+                                            e.DisplayName,
+                                            e.Id,
+                                            e.Identities
+                                        })
+                                        .GetAsync();
+
+                                    if (result != null)
+                                    {
+                                        log.LogInformation(JsonConvert.SerializeObject(result));
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    log.LogError(ex.Message);
+                                }
+                            }
                         }
                     }
                     // Replace these two lines with your processing logic.

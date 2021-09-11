@@ -183,6 +183,9 @@ module "eventapi" {
     "ComsosDBCollection" = "customers"
     "EventHubName"       = "b2caudit"
     "EventHubConnection" = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.kv.name};SecretName=eventhubcs)"
+    "AppId"              = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.kv.name};SecretName=b2cappid)"
+    "TenantId"           = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.kv.name};SecretName=b2ctenantid)"
+    "AppSecret"          = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.kv.name};SecretName=b2cclientsecret)"
   }
   app_identity = [
       {
