@@ -10,8 +10,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 using Microsoft.Graph;
-using Microsoft.Graph.Auth;
-using Microsoft.Identity.Client;
+using Azure.Identity;
 namespace event_api
 {
     public static class ProcessB2CAuditHub
@@ -41,16 +40,13 @@ namespace event_api
                             log.LogInformation($"C# Event Hub trigger function processed a message: {record.ToString()}");
                             if (graphClient == null)
                             {                                
-                                // Initialize the client credential auth provider
-                                IConfidentialClientApplication confidentialClientApplication = ConfidentialClientApplicationBuilder
-                                    .Create(Environment.GetEnvironmentVariable("AppId"))
-                                    .WithTenantId(Environment.GetEnvironmentVariable("TenantId"))
-                                    .WithClientSecret(Environment.GetEnvironmentVariable("AppSecret"))
-                                    .Build();
-                                ClientCredentialProvider authProvider = new ClientCredentialProvider(confidentialClientApplication);
+                                string[] scopes = {"https://graph.microsoft.com/.default"};
+                                string tenantId = Environment.GetEnvironmentVariable("TenantId");
+                                string clientId = Environment.GetEnvironmentVariable("AppId");
+                                string clientSecret = Environment.GetEnvironmentVariable("AppSecret");
+                                ClientSecretCredential clientSecretCredential = new ClientSecretCredential(tenantId, clientId, clientSecret); 
 
-                                // Set up the Microsoft Graph service client with client credentials
-                                graphClient = new GraphServiceClient(authProvider);
+                                graphClient = new GraphServiceClient(clientSecretCredential, scopes);
                             }
                             JObject properties = (JObject)record["properties"];
                             log.LogInformation($"properties = {properties.ToString()}");
