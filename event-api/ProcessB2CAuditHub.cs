@@ -23,7 +23,7 @@ namespace event_api
             [CosmosDB(
                 databaseName: "%CosmosDBDatabase%",
                 collectionName: "%ComsosDBCollection%",
-                ConnectionStringSetting = "CosmosDBConnection")] out dynamic document,
+                ConnectionStringSetting = "CosmosDBConnection")] IAsyncCollector<object> output,
             ILogger log)
         {
             var exceptions = new List<Exception>();
@@ -85,7 +85,7 @@ namespace event_api
                                             email = oi?.IssuerAssignedId;
                                         }
                                     }
-                                    document = new {
+                                    var retval = new {
                                         id = Guid.NewGuid(),
                                         displayName = result?.DisplayName,
                                         email = email,
@@ -93,7 +93,8 @@ namespace event_api
                                         lastName =  result?.Surname,
                                     };
                                     
-                                    log.LogInformation(JsonConvert.SerializeObject(document));
+                                    log.LogInformation(JsonConvert.SerializeObject(retval));
+                                    await output.AddAsync(retval);
                                 }
                             }
                             catch (Exception ex)
