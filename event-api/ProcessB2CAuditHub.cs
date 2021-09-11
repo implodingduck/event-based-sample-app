@@ -20,7 +20,10 @@ namespace event_api
         [FunctionName("ProcessB2CAuditHub")]
         public static async Task Run(
             [EventHubTrigger("%EventHubName%", Connection = "EventHubConnection")] EventData[] events, 
-            
+            [CosmosDB(
+                databaseName: "%CosmosDBDatabase%",
+                collectionName: "%ComsosDBCollection%",
+                ConnectionStringSetting = "CosmosDBConnection")] out dynamic document,
             ILogger log)
         {
             var exceptions = new List<Exception>();
@@ -82,14 +85,15 @@ namespace event_api
                                             email = oi?.IssuerAssignedId;
                                         }
                                     }
-                                    var retval = new {
+                                    document = new {
+                                        id = Guid.NewGuid(),
                                         displayName = result?.DisplayName,
                                         email = email,
                                         firstName = result?.GivenName,
                                         lastName =  result?.Surname,
                                     };
                                     
-                                    log.LogInformation(JsonConvert.SerializeObject(retval));
+                                    log.LogInformation(JsonConvert.SerializeObject(document));
                                 }
                             }
                             catch (Exception ex)

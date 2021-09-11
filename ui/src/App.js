@@ -1,24 +1,26 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from "react";
+
+import { MsalProvider, AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/msal-react";
+import { EventType, InteractionType } from "@azure/msal-browser";
+
+import { msalConfig, b2cPolicies, loginRequest } from "./authConfig";
+
+
 import './App.css';
 
-function App() {
+function App({msalInstance}) {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <MsalProvider instance={msalInstance}>
+      <AuthenticatedTemplate>
+        <p>Welcome!</p>
+        <button onClick={() => msalInstance.logoutRedirect({ postLogoutRedirectUri: "/" })}>Sign out</button>
+      </AuthenticatedTemplate>
+
+      <UnauthenticatedTemplate>
+        <p>Please sign-in to see your profile information.</p>
+        <button onClick={() => msalInstance.loginRedirect(loginRequest)}>Sign in!</button>
+      </UnauthenticatedTemplate>
+    </MsalProvider>
   );
 }
 
