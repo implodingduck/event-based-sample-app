@@ -84,7 +84,7 @@ namespace event_api
                                         displayName = result?.DisplayName,
                                         email = email,
                                         firstName = result?.GivenName,
-                                        lastName =  result?.SurName,
+                                        lastName =  result?.Surname,
                                     };
                                     
                                     log.LogInformation(JsonConvert.SerializeObject(retval));

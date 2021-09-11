@@ -1,10 +1,11 @@
 # event-based-sample-app
 
 ## Prerequisites
-Please perform the steps in this document up to step: **5**
 https://docs.microsoft.com/en-us/azure/active-directory-b2c/azure-monitor
 
-## Event Hub
-![Create Evemt Hub](createeventhub.png "Create Event Hub")
 ## After Terraform
-After the Terraform has ran, please go back to https://docs.microsoft.com/en-us/azure/active-directory-b2c/azure-monitor and associate the terraform created event hub with your b2c diagnostic settings.
+* B2C App registration
+  * Role: Attribute assignment reader
+  * Add tenantid, clientid and secret to keyvault
+* Event Hub Connection String to keyvault
+* 

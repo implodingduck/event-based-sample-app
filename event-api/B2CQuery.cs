@@ -72,7 +72,7 @@ namespace event_api
                         displayName = result?.DisplayName,
                         email = email,
                         firstName = result?.GivenName,
-                        lastName =  result?.SurName,
+                        lastName =  result?.Surname,
                     };
                     responseMessage = JsonConvert.SerializeObject(retval);
                     log.LogInformation(responseMessage);
