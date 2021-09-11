@@ -34,7 +34,9 @@ namespace event_api
                     JArray records = data.records;
                     foreach (JObject record in records)
                     {
-                        if ( "Add User".Equals(record["operationName"])){
+                        string operationName = (string)record?["operationName"];
+                        log.LogInformation($"OperationName: {operationName}");
+                        if ( "Add User".Equals(operationName)){
                             log.LogInformation("Found an add user operation");
                             log.LogInformation($"C# Event Hub trigger function processed a message: {record.ToString()}");
                             if (graphClient == null)
