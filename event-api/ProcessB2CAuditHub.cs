@@ -34,7 +34,7 @@ namespace event_api
                     JArray records = data.records;
                     foreach (JObject record in records)
                     {
-                        if ( "Add User".Equals(record.GetValue("operationName"))){
+                        if ( "Add User".Equals(record["operationName"])){
                             log.LogInformation("Found an add user operation");
                             log.LogInformation($"C# Event Hub trigger function processed a message: {record.ToString()}");
                             if (graphClient == null)
@@ -49,7 +49,11 @@ namespace event_api
 
                                 // Set up the Microsoft Graph service client with client credentials
                                 graphClient = new GraphServiceClient(authProvider);
-                                string userId = record?.GetValue("properties")?.GetValue("targetResources")[0].GetValue("id");
+                                JObject properties = (JObject)record["properties"];
+                                JArray targetResources = (JArray)properties["targetResources"];
+                                JObject targetResource = (JObject)targetResources[0];
+
+                                string userId = (string)targetResource["id"];
                                 try
                                 {
                                     // Get user by object ID
