@@ -62,6 +62,7 @@ jobs:
           TF_VAR_storage_account_name: ${{ steps.kvAction.outputs.storage-account-name }}
           TF_VAR_subscription_id: ${{ steps.kvAction.outputs.subscription-id }}
           TF_VAR_key: ${{ github.repository }}.tfstate
+          TF_VAR_email: ${{ secrets.TF_VAR_EMAIL }}
         run: |
             echo "starting..."
             cp event-api/local.settings.json.sample event-api/local.settings.json
