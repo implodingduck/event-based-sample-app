@@ -98,7 +98,7 @@ namespace event_api
                                     
                                     log.LogInformation(JsonConvert.SerializeObject(retval));
                                     await output.AddAsync(retval);
-                                    var myEvent = new EventGridEvent(Guid.NewGuid(), "/Events/Users/New/B2C", retval, "Custom.User", DateTime.UtcNow, "1.0");
+                                    var myEvent = new EventGridEvent(Guid.NewGuid().ToString(), "/Events/Users/New/B2C", retval, "Custom.User", DateTime.UtcNow, "1.0");
                                     await outputEvents.AddAsync(myEvent);
                                 }
                             }
