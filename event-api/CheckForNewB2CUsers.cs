@@ -29,7 +29,7 @@ namespace event_api
                 ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
                 : $"Hello, {name}. This HTTP triggered function executed successfully.";
 
-            HttpClient client = new HttpClient();
+            //HttpClient client = new HttpClient();
             // TODO https://docs.microsoft.com/en-us/azure/active-directory-b2c/view-audit-logs
 
             return new OkObjectResult(responseMessage);
