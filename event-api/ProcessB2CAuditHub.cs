@@ -21,7 +21,7 @@ namespace event_api
 
         [FunctionName("ProcessB2CAuditHub")]
         public static async Task Run(
-            [EventHubTrigger("%EventHubName%", Connection = "EventHubConnection")] EventData[] events, 
+            [EventHubTrigger("%EventHubName%", ConsumerGroup="event-based-sample-app", Connection = "EventHubConnection")] EventData[] events, 
             [CosmosDB(
                 databaseName: "%CosmosDBDatabase%",
                 collectionName: "%ComsosDBCollection%",
