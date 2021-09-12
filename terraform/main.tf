@@ -237,6 +237,26 @@ resource "azurerm_cosmosdb_sql_container" "db" {
   throughput            = 400
 }
 
+resource "azurerm_cosmosdb_sql_container" "accountsdb" {
+  name                  = "accounts"
+  resource_group_name   = azurerm_cosmosdb_account.db.resource_group_name
+  account_name          = azurerm_cosmosdb_account.db.name
+  database_name         = azurerm_cosmosdb_sql_database.db.name
+  partition_key_path    = "/id"
+  partition_key_version = 1
+  throughput            = 400
+}
+
+resource "azurerm_cosmosdb_sql_container" "transactionsdb" {
+  name                  = "transactions"
+  resource_group_name   = azurerm_cosmosdb_account.db.resource_group_name
+  account_name          = azurerm_cosmosdb_account.db.name
+  database_name         = azurerm_cosmosdb_sql_database.db.name
+  partition_key_path    = "/id"
+  partition_key_version = 1
+  throughput            = 400
+}
+
 resource "azurerm_key_vault_secret" "cosmosdbcs" {
   depends_on = [
     azurerm_key_vault_access_policy.sp
@@ -269,4 +289,24 @@ resource "azurerm_key_vault_secret" "egkey" {
   tags         = {
     "managed_by" = "terraform"
   }
+}
+
+data "template_file" "emaillogicapp" {
+  template = file("${path.module}/arm_email-logicapp.json.tmpl")
+  vars = {
+    "subscription_id" = var.subscription_id
+    "bcc" = var.email
+    "name" = "${local.func_name}-email-logicapp"
+    "location" = "eastus"
+    "resource_group_name" = azurerm_resource_group.rg.name
+    "eventgrid_id" = azurerm_eventgrid_topic.customusers.id
+  }
+}
+
+resource "azurerm_template_deployment" "logicapp" {
+  name                = "${local.func_name}-email-logicapp"
+  resource_group_name = azurerm_resource_group.rg.name
+
+  template_body = data.template_file.emaillogicapp.rendered
+  deployment_mode = "Incremental"
 }
