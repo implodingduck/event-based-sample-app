@@ -300,6 +300,7 @@ data "template_file" "emaillogicapp" {
     "location" = "eastus"
     "resource_group_name" = azurerm_resource_group.rg.name
     "eventgrid_id" = azurerm_eventgrid_topic.customusers.id
+    "tenant_id" = data.azurerm_client_config.current.tenant_id
   }
 }
 
