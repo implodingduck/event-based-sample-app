@@ -11,6 +11,8 @@ using Newtonsoft.Json.Linq;
 
 using Microsoft.Graph;
 using Azure.Identity;
+using Microsoft.Azure.EventGrid.Models;
+using Microsoft.Azure.WebJobs.Extensions.EventGrid;
 namespace event_api
 {
     public static class ProcessB2CAuditHub
@@ -24,6 +26,7 @@ namespace event_api
                 databaseName: "%CosmosDBDatabase%",
                 collectionName: "%ComsosDBCollection%",
                 ConnectionStringSetting = "CosmosDBConnection")] IAsyncCollector<object> output,
+            [EventGrid(TopicEndpointUri = "EventGridTopicUri", TopicKeySetting = "EventGridTopicKey")]IAsyncCollector<EventGridEvent> outputEvents,
             ILogger log)
         {
             var exceptions = new List<Exception>();
@@ -95,6 +98,8 @@ namespace event_api
                                     
                                     log.LogInformation(JsonConvert.SerializeObject(retval));
                                     await output.AddAsync(retval);
+                                    var myEvent = new EventGridEvent(Guid.NewGuid(), "/Events/Users/New/B2C", retval, "Custom.User", DateTime.UtcNow, "1.0");
+                                    await outputEvents.AddAsync(myEvent);
                                 }
                             }
                             catch (Exception ex)

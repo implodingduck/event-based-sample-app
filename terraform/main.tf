@@ -186,6 +186,8 @@ module "eventapi" {
     "AppId"              = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.kv.name};SecretName=b2cappid)"
     "TenantId"           = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.kv.name};SecretName=b2ctenantid)"
     "AppSecret"          = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.kv.name};SecretName=b2cclientsecret)"
+    "EventGridTopicUri"  =  azurerm_eventgrid_topic.customusers.endpoint
+    "EventGridTopicKey"  = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.kv.name};SecretName=${azurerm_key_vault_secret.egkey.name})"
   }
   app_identity = [
       {
@@ -241,6 +243,28 @@ resource "azurerm_key_vault_secret" "cosmosdbcs" {
   ]
   name         = "cosmosdbcs"
   value        = azurerm_cosmosdb_account.db.connection_strings.0 
+  key_vault_id = azurerm_key_vault.kv.id
+  tags         = {
+    "managed_by" = "terraform"
+  }
+}
+
+resource "azurerm_eventgrid_topic" "customusers" {
+  name                = "eg-custom-user"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+
+  tags = {
+    "managed_by" = "terraform"
+  }
+}
+
+resource "azurerm_key_vault_secret" "egkey" {
+  depends_on = [
+    azurerm_key_vault_access_policy.sp
+  ]
+  name         = "egkey"
+  value        = azurerm_eventgrid_topic.customusers.primary_access_key
   key_vault_id = azurerm_key_vault.kv.id
   tags         = {
     "managed_by" = "terraform"
