@@ -94,11 +94,13 @@ namespace event_api
                                         email = email,
                                         firstName = result?.GivenName,
                                         lastName =  result?.Surname,
+                                        createdTimestamp = DateTime.UtcNow,
+                                        lastUpdatedTimestamp = DateTime.UtcNow
                                     };
                                     
                                     log.LogInformation(JsonConvert.SerializeObject(retval));
                                     await output.AddAsync(retval);
-                                    var myEvent = new EventGridEvent(Guid.NewGuid().ToString(), "/Events/Users/New/B2C", retval, "Custom.User", DateTime.UtcNow, "1.0");
+                                    var myEvent = new EventGridEvent(Guid.NewGuid().ToString(), "/Events/Users/New/B2C", JObject.FromObject(retval), "Custom.User", DateTime.UtcNow, "1.0");
                                     await outputEvents.AddAsync(myEvent);
                                 }
                             }
