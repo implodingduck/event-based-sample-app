@@ -28,3 +28,18 @@ variable "location" {
 variable "email" {
   type = string
 }
+
+variable "api_issuer" {
+  type = string
+  sensitive = true
+}
+
+variable "api_client_id" {
+  type = string
+  sensitive = true
+}
+
+variable "api_client_secret" {
+  type = string
+  sensitive = true
+}

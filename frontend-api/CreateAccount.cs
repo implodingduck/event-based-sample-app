@@ -13,9 +13,9 @@ namespace frontend_api
 {
     public class Account 
     {
-        public string Type { get; set; }
-        public decimal Balance { get; set; }
-        public string Uid { get; set; }
+        public string type { get; set; }
+        public decimal balance { get; set; }
+        public string uid { get; set; }
 
     }
     public static class CreateAccount

@@ -8,4 +8,5 @@ https://docs.microsoft.com/en-us/azure/active-directory-b2c/azure-monitor
   * Role: Attribute assignment reader
   * Add tenantid, clientid and secret to keyvault
 * Event Hub Connection String to keyvault
-* 
+
+## Other

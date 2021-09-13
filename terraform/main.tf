@@ -176,6 +176,18 @@ module "func" {
           identity_ids = null
       }
   ]
+  auth_settings = [
+    {
+      enabled = true
+      default_provider = "AzureActiveDirectory"
+      unauthenticated_client_action  = "RedirectToLoginPage"
+      issuer = var.api_issuer
+      active_directory = [{
+        client_id = var.api_client_id
+        client_secret = var.api_client_secret
+      }]
+    }
+  ]
 }
 
 module "eventapi" {
