@@ -50,7 +50,7 @@ namespace frontend_api
                     retval.Add("----------------");
                 }
                 var newretval = new {
-                    id = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier),
+                    id = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier).Value,
                     oldretval = retval
                 };
                 return new OkObjectResult(
