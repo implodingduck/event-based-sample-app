@@ -14,7 +14,13 @@ namespace frontend_api
     {
         [FunctionName("GetTransactions")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "transactions/{accountid}")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "transactions/{accountId}")] HttpRequest req,
+            [CosmosDB(
+                databaseName: "%CosmosDBDatabase%",
+                collectionName: "accounts",
+                ConnectionStringSetting = "CosmosDBConnection",
+                SqlQuery = "select * from accounts a where a.accountId = {accountId}")]
+                IEnumerable<Transaction> transactions,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
@@ -29,7 +35,7 @@ namespace frontend_api
                 ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
                 : $"Hello, {name}. This HTTP triggered function executed successfully.";
 
-            return new OkObjectResult(responseMessage);
+            return new OkObjectResult(JsonConvert.SerializeObject(transactions));
         }
     }
 }
