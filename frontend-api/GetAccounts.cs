@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -32,22 +34,22 @@ namespace frontend_api
                 : $"Hello, {name}. This HTTP triggered function executed successfully.";
             try
             {
+                List<string> retval = new List<string>();
+                foreach (var identity in claimsPrincipal.Identities)
+                {
+                    log.LogInformation($"Identity {identity.Name}:");
+                    retval.Add($"Identity {identity.Name}:");
+                    log.LogInformation($"Auth type is {identity.AuthenticationType}");
+                    retval.Add($"Auth type is {identity.AuthenticationType}");
+                    foreach (var claim in identity.Claims)
+                    {
+                        log.LogInformation($"Claim '{claim.Type}' = '{claim.Value}'");
+                        retval.Add($"Claim '{claim.Type}' = '{claim.Value}'");
+                    }
+                    retval.Add("----------------");
+                }
                 return new OkObjectResult(
-                    req.HttpContext.User.Identities.Select(x =>
-                        new {
-                            Claims = x.Claims.Select(y => new
-                                {
-                                    y.Type,
-                                    y.Value,
-                                    y.Issuer,
-                                    y.Properties
-                                }),
-                            x.Name,
-                            x.Actor,
-                            x.AuthenticationType,
-                            x.NameClaimType
-                        }
-                    )
+                retval
                 );
             }
             catch (Exception ex) {
