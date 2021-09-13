@@ -6,7 +6,7 @@ import { useMsal, useAccount } from "@azure/msal-react";
 
 import { Button, Container, Modal, Col, Row } from 'react-bootstrap'
 import { apiConfig } from './apiConfig'
-
+import { callB2CApi } from './helper'
 function Accounts() {
     const { instance, accounts, inProgress } = useMsal();
     const msalaccount = useAccount(accounts[0] || {});
@@ -18,23 +18,11 @@ function Accounts() {
     });
 
     const refreshAccounts = () => {
-        instance.acquireTokenSilent({
-            scopes: apiConfig.scopes,
-            account: msalaccount
-        }).then((tokenResponse) => {
-            console.log('Token Response: ')
-            console.log(tokenResponse)
-            fetch(`${apiConfig.baseurl}/api/accounts/?code=${apiConfig.code}`, {
-                headers: {
-                    "authorization": `Bearer ${tokenResponse.accessToken}`
-                }
-            })
-                .then((response) => response.json())
-                .then(accountsJson => {
-                    console.log(accountsJson)
-                    setMyAccounts(accountsJson);
-                });
-        })
+        callB2CApi('api/accounts/', instance, msalaccount)
+            .then(accountsJson => {
+                console.log(accountsJson)
+                setMyAccounts(accountsJson);
+            });
     }
 
     useEffect(() => {
@@ -51,7 +39,7 @@ function Accounts() {
             scopes: apiConfig.scopes,
             account: msalaccount
         }).then((tokenResponse) => {
-            fetch(`${apiConfig.baseurl}/api/accounts/?code=${apiConfig.code}`, {
+            callB2CApi('api/accounts/', instance, msalaccount, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -61,7 +49,7 @@ function Accounts() {
                     "type": createAccount.type,
                     "balance": createAccount.balance
                 })
-            } ).then( () => {})
+            } ).then( () => { refreshAccounts() })
         })
     }
 

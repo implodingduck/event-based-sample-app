@@ -7,6 +7,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Security.Claims;
 
 namespace frontend_api
 {
@@ -15,6 +16,7 @@ namespace frontend_api
         [FunctionName("GetAccounts")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "accounts")] HttpRequest req,
+            ClaimsPrincipal claimsPrincipal,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
@@ -28,8 +30,9 @@ namespace frontend_api
             string responseMessage = string.IsNullOrEmpty(name)
                 ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
                 : $"Hello, {name}. This HTTP triggered function executed successfully.";
-            
-            return new OkObjectResult("[{ \"hello\" : \"world\"}]");
+            string principal = JsonConvert.SerializeObject(claimsPrincipal);
+            //return new OkObjectResult("[{ \"hello\" : \"world\"}]");
+            return new OkObjectResult(principal);
         }
     }
 }
