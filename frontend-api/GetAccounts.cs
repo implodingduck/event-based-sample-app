@@ -38,7 +38,7 @@ namespace frontend_api
 
             Uri collectionUri = UriFactory.CreateDocumentCollectionUri(databaseName, collectionName);
 
-            var accountsQuery = client.CreateDocumentQuery<Account>(collectionUri)
+            var accountsQuery = client.CreateDocumentQuery<Account>(collectionUri, new FeedOptions { EnableCrossPartitionQuery = true })
                                     .Where(a => a.uid == id)
                                     .AsEnumerable();
 
