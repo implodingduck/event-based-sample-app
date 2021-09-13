@@ -89,7 +89,7 @@ namespace event_api
                                         }
                                     }
                                     var retval = new {
-                                        id = Guid.NewGuid(),
+                                        id = userId,
                                         displayName = result?.DisplayName,
                                         email = email,
                                         firstName = result?.GivenName,

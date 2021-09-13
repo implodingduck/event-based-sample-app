@@ -137,6 +137,15 @@ resource "azurerm_servicebus_queue" "customer" {
   enable_partitioning = true
 }
 
+resource "azurerm_servicebus_queue" "account" {
+  name                = "accountqueue"
+  resource_group_name = azurerm_resource_group.rg.name
+  namespace_name      = azurerm_servicebus_namespace.customer.name
+
+  enable_partitioning = true
+}
+
+
 resource "azurerm_key_vault_secret" "sbcustomercs" {
   depends_on = [
     azurerm_key_vault_access_policy.sp
