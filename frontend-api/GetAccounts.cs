@@ -46,10 +46,15 @@ namespace frontend_api
                         log.LogInformation($"Claim '{claim.Type}' = '{claim.Value}'");
                         retval.Add($"Claim '{claim.Type}' = '{claim.Value}'");
                     }
+                    retval.Add(JsonConvert.SerializeObject(identity.BootstrapContext));
                     retval.Add("----------------");
                 }
+                var newretval = new {
+                    id = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier),
+                    oldretval = retval
+                };
                 return new OkObjectResult(
-                retval
+                    JsonConvert.SerializeObject(newretval)
                 );
             }
             catch (Exception ex) {
