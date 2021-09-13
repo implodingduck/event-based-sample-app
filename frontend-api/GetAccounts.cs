@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -11,7 +12,8 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Security.Claims;
-
+using Microsoft.Azure.Documents.Client;
+using Microsoft.Azure.Documents.Linq;
 namespace frontend_api
 {
     public static class GetAccounts
@@ -20,26 +22,30 @@ namespace frontend_api
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "accounts")] HttpRequest req,
             [CosmosDB(
+                databaseName: "%CosmosDBDatabase%",
+                collectionName: "accounts",
                 ConnectionStringSetting = "CosmosDBConnection")]
-                 DocumentClient client,
+                DocumentClient client,
             ClaimsPrincipal claimsPrincipal,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
-            string comsosDatabase = Environment.GetEnvironmentVariable("CosmosDBDatabase");
-            Uri documentCollectionUri = UriFactory.CreateDocumentCollectionUri(databaseId: comsosDatabase, collectionId: "accounts");
-            IDocumentQuery<JObject> query = client.CreateDocumentQuery<JObject>(documentCollectionUri, options)
-                                         .Where(doc => doc.uid == claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier).Value)
-                                         .AsDocumentQuery();
-            var accounts = new JArray();
-            while (query.HasMoreResults)
-            {
-                foreach (JObject jo in await query.ExecuteNextAsync())
-                {
-                    accounts.Add(jo);
-                }
-            }      
-            return new OkObjectResult(accounts.ToString());
+            string id = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var accounts = new List<Account>();
+
+            string databaseName = Environment.GetEnvironmentVariable("CosmosDBDatabase");
+            string collectionName = "accounts";
+
+            Uri collectionUri = UriFactory.CreateDocumentCollectionUri(databaseName, collectionName);
+
+            var accountsQuery = client.CreateDocumentQuery<Account>(collectionUri)
+                                    .Where(a => a.uid == id)
+                                    .AsEnumerable();
+
+              
+            
+            
+            return new OkObjectResult(JsonConvert.SerializeObject(accountsQuery));
             // string name = req.Query["name"];
 
             // string requestBody = await new StreamReader(req.Body).ReadToEndAsync();

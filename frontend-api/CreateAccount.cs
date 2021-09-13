@@ -8,16 +8,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-
+using System.Security.Claims;
 namespace frontend_api
 {
-    public class Account 
-    {
-        public string type { get; set; }
-        public decimal balance { get; set; }
-        public string uid { get; set; }
-
-    }
+    
     public static class CreateAccount
     {
         [FunctionName("CreateAccount")]
