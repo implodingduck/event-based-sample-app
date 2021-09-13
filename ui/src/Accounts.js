@@ -47,16 +47,22 @@ function Accounts() {
 
     const handleCreateAccount = () => {
         setShowCreateAccount(false)
-        fetch('/api/accounts/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                "type": createAccount.type,
-                "balance": createAccount.balance
-            })
-        } ).then( () => window.location.reload())
+        instance.acquireTokenSilent({
+            scopes: apiConfig.scopes,
+            account: msalaccount
+        }).then((tokenResponse) => {
+            fetch(`${apiConfig.baseurl}/api/accounts/?code=${apiConfig.code}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    "authorization": `Bearer ${tokenResponse.accessToken}`
+                },
+                body: JSON.stringify({
+                    "type": createAccount.type,
+                    "balance": createAccount.balance
+                })
+            } ).then( () => {})
+        })
     }
 
     const handleTypeChange = (e) => {
