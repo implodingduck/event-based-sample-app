@@ -29,7 +29,7 @@ namespace frontend_api
             transaction.creationTime = DateTime.UtcNow;
 
             string transactionString = JsonConvert.SerializeObject(transaction);
-            outputEvents.AddAsync(transactionString);
+            await outputEvents.AddAsync(transactionString);
             return new OkObjectResult(transactionString);
         }
     }
