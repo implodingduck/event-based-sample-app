@@ -32,9 +32,23 @@ namespace frontend_api
                 : $"Hello, {name}. This HTTP triggered function executed successfully.";
             try
             {
-                string principal = claimsPrincipal?.Identity.ToString();
-                //return new OkObjectResult("[{ \"hello\" : \"world\"}]");
-                return new OkObjectResult(principal);
+                return new OkObjectResult(
+                    req.HttpContext.User.Identities.Select(x =>
+                        new {
+                            Claims = x.Claims.Select(y => new
+                                {
+                                    y.Type,
+                                    y.Value,
+                                    y.Issuer,
+                                    y.Properties
+                                }),
+                            x.Name,
+                            x.Actor,
+                            x.AuthenticationType,
+                            x.NameClaimType
+                        }
+                    )
+                );
             }
             catch (Exception ex) {
                 return new BadRequestObjectResult(ex.Message);
