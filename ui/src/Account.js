@@ -2,10 +2,11 @@ import React, {Component, useState, useEffect} from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { Container, Row, Col, Table, Button, Modal } from 'react-bootstrap'
-import { useMsal } from "@azure/msal-react";
-
+import { useMsal, useAccount } from "@azure/msal-react";
+import { callB2CApi } from './helper'
 function Account( {account, refreshAccounts} ) {
-    const { msalAccounts } = useMsal();
+    const { instance, accounts } = useMsal();
+    const msalaccount = useAccount(accounts[0] || {});
 
     const BASETRANSACTION = {
         "accountId": account.id,
@@ -19,8 +20,7 @@ function Account( {account, refreshAccounts} ) {
     const [transaction, setTransaction] = useState(JSON.parse(JSON.stringify(BASETRANSACTION)))
 
     const fetchTransactions = () => {
-        fetch('/api/transactions/' + account.id +'/')
-        .then((response) => response.json())
+        callB2CApi('api/transactions/' + account.id +'/', instance, msalaccount)
         .then(transactionsJson => {
             console.log(transactionsJson)
             setTransactionlist(transactionsJson)
@@ -56,7 +56,7 @@ function Account( {account, refreshAccounts} ) {
 
     const handleTransaction = () => {
         setShowTransaction(false)
-        fetch('/api/transactions/', {
+        callB2CApi('api/transactions/', instance, msalaccount, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -75,7 +75,7 @@ function Account( {account, refreshAccounts} ) {
 
     const handleCloseAccount = () => {
         if (window.confirm("Do you really want to close this account?")){
-            fetch('/api/accounts/'+account.id+'/', {
+            fetch('api/accounts/'+account.id+'/', {
                 method: 'DELETE'
             }).then( () => window.location.reload() )
         }

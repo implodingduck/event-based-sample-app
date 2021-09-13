@@ -15,21 +15,18 @@ namespace frontend_api
         [FunctionName("CreateTransaction")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = "transactions")] HttpRequest req,
+            [EventHub("%EventHubName%", ConsumerGroup="event-based-sample-app", Connection = "EventHubConnection")]IAsyncCollector<string> outputEvents,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            string name = req.Query["name"];
-
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
+            Transaction transaction = ((JObject)JsonConvert.DeserializeObject(requestBody)).ToObject<Transaction>();
+            transaction.createdTimestamp = DateTime.UtcNow;
 
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
-
-            return new OkObjectResult(responseMessage);
+            string transactionString = JsonConvert.SerializeObject(transaction);
+            outputEvents.AddAsync(transactionString);
+            return new OkObjectResult(transactionString);
         }
     }
 }

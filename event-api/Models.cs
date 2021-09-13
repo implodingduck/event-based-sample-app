@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace frontend_api
+namespace event_api
 {
     public class Account 
     {
