@@ -19,10 +19,16 @@ function Accounts() {
 
     const refreshAccounts = () => {
         instance.acquireTokenSilent({
+            scopes: apiConfig.scopes,
             account: msalaccount
         }).then((tokenResponse) => {
+            console.log('Token Response: ')
             console.log(tokenResponse)
-            fetch(`${apiConfig.baseurl}/api/accounts/?code=${apiConfig.code}`)
+            fetch(`${apiConfig.baseurl}/api/accounts/?code=${apiConfig.code}`, {
+                headers: {
+                    "authorization": `Bearer ${tokenResponse.accessToken}`
+                }
+            })
                 .then((response) => response.json())
                 .then(accountsJson => {
                     console.log(accountsJson)
