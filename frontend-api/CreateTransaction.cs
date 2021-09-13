@@ -25,6 +25,7 @@ namespace frontend_api
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             Transaction transaction = ((JObject)JsonConvert.DeserializeObject(requestBody)).ToObject<Transaction>();
+            transaction.id = Guid.NewGuid().ToString();
             transaction.creationTime = DateTime.UtcNow;
 
             string transactionString = JsonConvert.SerializeObject(transaction);

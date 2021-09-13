@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.Azure.EventHubs;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
-
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 namespace event_api
 {
     public static class ProcessCreateTransaction
@@ -29,6 +30,9 @@ namespace event_api
 
                     // Replace these two lines with your processing logic.
                     log.LogInformation($"C# Event Hub trigger function processed a message: {messageBody}");
+                    Transaction t = ((JObject)JsonConvert.DeserializeObject(messageBody)).ToObject<Transaction>();
+                    t.completionTime = DateTime.UtcNow;
+                    await output.AddAsync(t);
                     await Task.Yield();
                 }
                 catch (Exception e)
