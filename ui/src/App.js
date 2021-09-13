@@ -7,6 +7,7 @@ import { msalConfig, b2cPolicies, loginRequest } from "./authConfig";
 
 import MsalTest from "./MsalTest";
 import './App.css';
+import Accounts from "./Accounts"
 
 function App({msalInstance}) {
   
@@ -14,6 +15,7 @@ function App({msalInstance}) {
     <MsalProvider instance={msalInstance}>
       <AuthenticatedTemplate>
         <p>Welcome!</p>
+        <Accounts></Accounts>
         <MsalTest></MsalTest>
         <pre>
 

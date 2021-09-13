@@ -10,3 +10,4 @@ https://docs.microsoft.com/en-us/azure/active-directory-b2c/azure-monitor
 * Event Hub Connection String to keyvault
 
 ## Other
+https://github.com/Azure-Samples/ms-identity-javascript-react-tutorial
