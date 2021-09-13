@@ -30,9 +30,16 @@ namespace frontend_api
             string responseMessage = string.IsNullOrEmpty(name)
                 ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
                 : $"Hello, {name}. This HTTP triggered function executed successfully.";
-            string principal = JsonConvert.SerializeObject(claimsPrincipal);
-            //return new OkObjectResult("[{ \"hello\" : \"world\"}]");
-            return new OkObjectResult(principal);
+            try
+            {
+                string principal = JsonConvert.SerializeObject(claimsPrincipal);
+                //return new OkObjectResult("[{ \"hello\" : \"world\"}]");
+                return new OkObjectResult(principal);
+            }
+            catch (Exception ex) {
+                return new BadRequestObjectResult(ex.Message);
+            }
+            
         }
     }
 }
