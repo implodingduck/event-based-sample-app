@@ -32,7 +32,7 @@ namespace frontend_api
                 : $"Hello, {name}. This HTTP triggered function executed successfully.";
             try
             {
-                string principal = JsonConvert.SerializeObject(claimsPrincipal?.Identity);
+                string principal = claimsPrincipal?.Identity.ToString();
                 //return new OkObjectResult("[{ \"hello\" : \"world\"}]");
                 return new OkObjectResult(principal);
             }
