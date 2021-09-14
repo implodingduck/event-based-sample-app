@@ -207,6 +207,7 @@ module "eventapi" {
   asp_kind = "linux"
   plan_tier = "Basic"
   plan_size = "B1"
+  always_on = true
   linux_fx_version = "DOTNETCORE|3.1"
   working_dir = "../event-api"
   app_settings = {
