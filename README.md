@@ -1,5 +1,6 @@
 # event-based-sample-app
 
+![Architecture diagram of this project](EventDrivenSampleApp.png "Architecture diagram of this project")
 ## Prerequisites
 https://docs.microsoft.com/en-us/azure/active-directory-b2c/azure-monitor
 

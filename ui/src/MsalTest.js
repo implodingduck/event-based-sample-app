@@ -5,8 +5,8 @@ function MsalTest () {
 
     return (
         <div>
-          <h2>Accounts</h2>
-          <pre>{ JSON.stringify(accounts, null, 2) }</pre>
+          <h2>Welcome, { accounts[0].name }</h2>
+          <pre style={ { display: "none" }}>{ JSON.stringify(accounts, null, 2) }</pre>
         </div>
     )
 }
