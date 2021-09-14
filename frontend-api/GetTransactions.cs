@@ -21,7 +21,7 @@ namespace frontend_api
                 databaseName: "%CosmosDBDatabase%",
                 collectionName: "accounts",
                 ConnectionStringSetting = "CosmosDBConnection",
-                SqlQuery = "select * from %CosmosDBDatabase% a where a.accountId = {accountId}")]
+                SqlQuery = "select * from c where c.accountId = {accountId}")]
                 IEnumerable<Transaction> transactions,
             ILogger log)
         {
