@@ -41,12 +41,12 @@ namespace event_api
                     string collectionName = "accounts";
 
                     Uri documentUri = UriFactory.CreateDocumentUri(databaseName, collectionName, t.accountId);
-                    Document account = await client.ReadDocumentAsync(documentUri);
+                    Document account = await client.ReadDocumentAsync(documentUri, new RequestOptions { PartitionKey = new PartitionKey(t.accountId) });
                     log.LogInformation($"Account(pre): {JsonConvert.SerializeObject(account)}");
                     decimal newBalance = account.GetPropertyValue<decimal>("balance") + t.amount;
                     account.SetPropertyValue("balance", newBalance);
                     
-                    await client.UpsertDocumentAsync(documentUri, account);
+                    await client.UpsertDocumentAsync(documentUri, account, new RequestOptions { PartitionKey = new PartitionKey(t.accountId) });
                     log.LogInformation($"Account(post): {JsonConvert.SerializeObject(account)}");
                     await Task.Yield();
                 }
