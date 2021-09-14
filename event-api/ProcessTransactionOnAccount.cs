@@ -24,7 +24,7 @@ namespace event_api
                 ConnectionStringSetting = "CosmosDBConnection")] DocumentClient client,
             ILogger log)
         {
-            log.LogInformation("ProcessCreateTransaction");
+            log.LogInformation("ProcessTransactionOnAccount");
             var exceptions = new List<Exception>();
 
             foreach (EventData eventData in events)
