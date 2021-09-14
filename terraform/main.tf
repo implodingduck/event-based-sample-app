@@ -204,6 +204,8 @@ module "eventapi" {
   func_name = "api${local.func_name}"
   resource_group_name = azurerm_resource_group.rg.name
   resource_group_location = azurerm_resource_group.rg.location
+  plan_tier = "Standard"
+  plan_size = "B1"
   working_dir = "../event-api"
   app_settings = {
     "FUNCTIONS_WORKER_RUNTIME" = "dotnet"

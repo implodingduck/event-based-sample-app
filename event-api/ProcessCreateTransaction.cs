@@ -30,7 +30,8 @@ namespace event_api
 
                     // Replace these two lines with your processing logic.
                     log.LogInformation($"C# Event Hub trigger function processed a message: {messageBody}");
-                    Transaction t = ((JObject)JsonConvert.DeserializeObject(messageBody)).ToObject<Transaction>();
+                    TransactionWrapper tw = ((JObject)JsonConvert.DeserializeObject(messageBody)).ToObject<TransactionWrapper>();
+                    Transaction t = tw.transaction;
                     t.completionTime = DateTime.UtcNow;
                     await output.AddAsync(t);
                     await Task.Yield();

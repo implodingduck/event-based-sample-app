@@ -27,8 +27,10 @@ namespace frontend_api
             Transaction transaction = ((JObject)JsonConvert.DeserializeObject(requestBody)).ToObject<Transaction>();
             transaction.id = Guid.NewGuid().ToString();
             transaction.creationTime = DateTime.UtcNow;
-
-            string transactionString = JsonConvert.SerializeObject(transaction);
+            var wrapper = new {
+                transaction = transaction
+            };
+            string transactionString = JsonConvert.SerializeObject(wrapper);
             await outputEvents.AddAsync(new EventData(System.Text.Encoding.UTF8.GetBytes(transactionString)));
             return new OkObjectResult(transactionString);
         }

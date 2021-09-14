@@ -24,4 +24,9 @@ namespace event_api
         public DateTime completionTime { get; set; }
 
     }
+
+    public class TransactionWrapper
+    {
+        public Transaction transaction { get; set; }
+    }
 }
