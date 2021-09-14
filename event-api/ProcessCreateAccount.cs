@@ -4,6 +4,8 @@ using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Microsoft.Azure.EventGrid.Models;
+using Microsoft.Azure.WebJobs.Extensions.EventGrid;
 namespace event_api
 {
     public static class ProcessCreateAccount
@@ -14,7 +16,7 @@ namespace event_api
                 databaseName: "%CosmosDBDatabase%",
                 collectionName: "accounts",
                 ConnectionStringSetting = "CosmosDBConnection")] out dynamic document,
-            [EventGrid(TopicEndpointUri = "EventGridTopicUri", TopicKeySetting = "EventGridTopicKey")]IAsyncCollector<EventGridEvent> outputEvents,
+            [EventGrid(TopicEndpointUri = "EventGridTopicUri", TopicKeySetting = "EventGridTopicKey")]out EventGridEvent outputEvent,
             ILogger log)
         {
             log.LogInformation($"C# ServiceBus queue trigger function processed message: {myQueueItem}");
@@ -29,8 +31,8 @@ namespace event_api
             };
 
             log.LogInformation($"Hopefully {data.firstName} {data.lastName} is now in cosmos");
-            var myEvent = new EventGridEvent(Guid.NewGuid().ToString(), "/Events/Accounts/New", JObject.FromObject(document), "Custom.Account", DateTime.UtcNow, "1.0");
-            await outputEvents.AddAsync(myEvent);
+            outputEvent = new EventGridEvent(Guid.NewGuid().ToString(), "/Events/Accounts/New", JObject.FromObject(document), "Custom.Account", DateTime.UtcNow, "1.0");
+
         }
     }
 }
