@@ -48,11 +48,18 @@ namespace event_api
 
             // Once processing of the batch is complete, if any messages in the batch failed processing throw an exception so that there is a record of the failure.
 
-            if (exceptions.Count > 1)
+            if (exceptions.Count > 0)
+            {
+                foreach( Exception e in exceptions)
+                {
+                    log.LogError(e.Message);
+                    if(exceptions.Count == 1)
+                    {
+                        throw e;
+                    }
+                }
                 throw new AggregateException(exceptions);
-
-            if (exceptions.Count == 1)
-                throw exceptions.Single();
+            }
         }
     }
 }
