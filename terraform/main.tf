@@ -223,6 +223,7 @@ module "eventapi" {
     "AppSecret"          = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.kv.name};SecretName=b2cclientsecret)"
     "EventGridTopicUri"  =  azurerm_eventgrid_topic.customusers.endpoint
     "EventGridTopicKey"  = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.kv.name};SecretName=${azurerm_key_vault_secret.egkey.name})"
+    "LogicAppUrl"        = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.kv.name};SecretName=logicappurl)"
   }
   app_identity = [
       {
@@ -311,6 +312,15 @@ resource "azurerm_eventgrid_topic" "customusers" {
 
   tags = {
     "managed_by" = "terraform"
+  }
+}
+
+resource "azurerm_eventgrid_event_subscription" "func" {
+  name  = "${local.func_name}EventSubscription"
+  scope = azurerm_resource_group.rg.id
+
+  azure_function_endpoint {
+    function_id = module.eventapi.function_id
   }
 }
 

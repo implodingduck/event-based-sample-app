@@ -49,80 +49,31 @@
                         }
                     },
                     "triggers": {
-                        "When_a_resource_event_occurs": {
-                            "splitOn": "@triggerBody()",
-                            "type": "ApiConnectionWebhook",
+                        "manual": {
+                            "type": "Request",
+                            "kind": "Http",
                             "inputs": {
-                                "body": {
-                                    "properties": {
-                                        "destination": {
-                                            "endpointType": "webhook",
-                                            "properties": {
-                                                "endpointUrl": "@{listCallbackUrl()}"
-                                            }
-                                        },
-                                        "topic": "[parameters('topics_eg_custom_user_externalid')]"
-                                    }
-                                },
-                                "host": {
-                                    "connection": {
-                                        "name": "@parameters('$connections')['azureeventgrid']['connectionId']"
-                                    }
-                                },
-                                "path": "/subscriptions/@{encodeURIComponent('${subscription_id}')}/providers/@{encodeURIComponent('Microsoft.EventGrid.Topics')}/resource/eventSubscriptions",
-                                "queries": {
-                                    "x-ms-api-version": "2017-09-15-preview"
-                                }
-                            }
-                        }
-                    },
-                    "actions": {
-                        "Parse_JSON": {
-                            "runAfter": {},
-                            "type": "ParseJson",
-                            "inputs": {
-                                "content": "@triggerBody()?['data']",
                                 "schema": {
                                     "properties": {
-                                        "createdTimestamp": {
-                                            "type": "string"
-                                        },
-                                        "displayName": {
-                                            "type": "string"
-                                        },
-                                        "email": {
-                                            "type": "string"
-                                        },
-                                        "firstName": {
-                                            "type": "string"
-                                        },
-                                        "id": {
-                                            "type": "string"
-                                        },
-                                        "lastName": {
-                                            "type": "string"
-                                        },
-                                        "lastUpdatedTimestamp": {
-                                            "type": "string"
+                                        "eventdata": {
+                                            "properties": {},
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
                                 }
                             }
-                        },
+                        }
+                    },
+                    "actions": {
                         "Send_an_email_(V2)": {
-                            "runAfter": {
-                                "Parse_JSON": [
-                                    "Succeeded"
-                                ]
-                            },
+                            "runAfter": {},
                             "type": "ApiConnection",
                             "inputs": {
                                 "body": {
-                                    "Bcc": "${bcc}",
-                                    "Body": "<p>Hello @{body('Parse_JSON')?['firstName']},<br>\nThank you for signing up with our service as @{body('Parse_JSON')?['displayName']}!<br>\n<br>\nIf you have any questions please reach out to our helpful support team.<br>\n<br>\nThanks!</p>",
-                                    "Subject": "Welcome!",
-                                    "To": "@body('Parse_JSON')?['email']"
+                                    "Body": "<p>Hello ,<br>\nThis is from Event Grid:<br>\n@{triggerBody()}<br>\n<br>\nThanks!</p>",
+                                    "Subject": "Event Grid Email",
+                                    "To": "${bcc}"
                                 },
                                 "host": {
                                     "connection": {
