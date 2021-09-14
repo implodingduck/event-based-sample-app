@@ -317,7 +317,7 @@ resource "azurerm_eventgrid_topic" "customusers" {
 
 resource "azurerm_eventgrid_event_subscription" "func" {
   name  = "${local.func_name}EventSubscription"
-  scope = azurerm_resource_group.rg.id
+  scope = azurerm_eventgrid_topic.customusers.id
 
   azure_function_endpoint {
     function_id = "${module.eventapi.function_id}/functions/Emailer"
