@@ -206,6 +206,7 @@ module "eventapi" {
   resource_group_location = azurerm_resource_group.rg.location
   plan_tier = "Standard"
   plan_size = "B1"
+  linux_fx_version = "DOTNETCORE|3.1"
   working_dir = "../event-api"
   app_settings = {
     "FUNCTIONS_WORKER_RUNTIME" = "dotnet"
