@@ -320,7 +320,7 @@ resource "azurerm_eventgrid_event_subscription" "func" {
   scope = azurerm_resource_group.rg.id
 
   azure_function_endpoint {
-    function_id = module.eventapi.function_id
+    function_id = "${module.eventapi.function_id}/functions/Emailer"
   }
 }
 
