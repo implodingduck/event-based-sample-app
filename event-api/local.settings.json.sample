@@ -2,6 +2,17 @@
     "IsEncrypted": false,
     "Values": {
         "AzureWebJobsStorage": "",
-        "FUNCTIONS_WORKER_RUNTIME": "dotnet"
+        "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+        "CustomerServiceBus": "",
+        "CosmosDBConnection": "",
+        "CosmosDBDatabase"  : "",
+        "ComsosDBCollection": "",
+        "EventHubName"      : "",
+        "EventHubConnection": "",
+        "AppId"             : "",
+        "TenantId"          : "",
+        "AppSecret"         : "",
+        "EventGridTopicUri" :  "",
+        "EventGridTopicKey" : ""
     }
 }
