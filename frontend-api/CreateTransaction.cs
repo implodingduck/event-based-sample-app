@@ -18,7 +18,7 @@ namespace frontend_api
         [FunctionName("CreateTransaction")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = "transactions")] HttpRequest req,
-            [EventHub("%EventHubName%", Connection = "EventHubConnection")]IAsyncCollector<string> outputEvents,
+            [EventHub("%EventHubName%", Connection = "EventHubConnection")]IAsyncCollector<EventData> outputEvents,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
@@ -29,7 +29,7 @@ namespace frontend_api
             transaction.creationTime = DateTime.UtcNow;
 
             string transactionString = JsonConvert.SerializeObject(transaction);
-            await outputEvents.AddAsync(transactionString);
+            await outputEvents.AddAsync(new EventData(System.Text.Encoding.UTF8.GetBytes(transactionString)));
             return new OkObjectResult(transactionString);
         }
     }
