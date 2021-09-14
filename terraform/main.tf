@@ -205,7 +205,7 @@ module "eventapi" {
   resource_group_name = azurerm_resource_group.rg.name
   resource_group_location = azurerm_resource_group.rg.location
   asp_kind = "linux"
-  plan_tier = "Standard"
+  plan_tier = "Basic"
   plan_size = "B1"
   linux_fx_version = "DOTNETCORE|3.1"
   working_dir = "../event-api"
