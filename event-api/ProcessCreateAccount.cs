@@ -14,6 +14,7 @@ namespace event_api
                 databaseName: "%CosmosDBDatabase%",
                 collectionName: "accounts",
                 ConnectionStringSetting = "CosmosDBConnection")] out dynamic document,
+            [EventGrid(TopicEndpointUri = "EventGridTopicUri", TopicKeySetting = "EventGridTopicKey")]IAsyncCollector<EventGridEvent> outputEvents,
             ILogger log)
         {
             log.LogInformation($"C# ServiceBus queue trigger function processed message: {myQueueItem}");
@@ -28,6 +29,8 @@ namespace event_api
             };
 
             log.LogInformation($"Hopefully {data.firstName} {data.lastName} is now in cosmos");
+            var myEvent = new EventGridEvent(Guid.NewGuid().ToString(), "/Events/Accounts/New", JObject.FromObject(document), "Custom.Account", DateTime.UtcNow, "1.0");
+            await outputEvents.AddAsync(myEvent);
         }
     }
 }

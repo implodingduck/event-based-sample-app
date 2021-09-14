@@ -123,7 +123,7 @@ function Account( {account, refreshAccounts} ) {
                     </thead>
                     <tbody>
                     { transactionlist.map((t, i) => {
-                        return (<tr key={i}><td>{t.description}</td><td>{t.amount}</td><td>{t.dateCreated}</td></tr>)
+                        return (<tr key={i}><td>{t.description}</td><td>{t.amount}</td><td>{t.completionTime}</td></tr>)
                     })}
                     </tbody>
                 </Table>
