@@ -13,13 +13,15 @@ namespace event_api
     public static class ProcessCreateTransaction
     {
         [FunctionName("ProcessCreateTransaction")]
-        public static async Task Run([EventHubTrigger("transactions", ConsumerGroup="event-based-sample-app", Connection = "EventHubConnection")] EventData[] events, 
+        public static async Task Run(
+            [EventHubTrigger("transactions", ConsumerGroup="event-based-sample-app", Connection = "EventHubConnection")] EventData[] events, 
             [CosmosDB(
                 databaseName: "%CosmosDBDatabase%",
                 collectionName: "transactions",
                 ConnectionStringSetting = "CosmosDBConnection")] IAsyncCollector<object> output,
             ILogger log)
         {
+            log.LogInformation("ProcessCreateTransaction");
             var exceptions = new List<Exception>();
 
             foreach (EventData eventData in events)
