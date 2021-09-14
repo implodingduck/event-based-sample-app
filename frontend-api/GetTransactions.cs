@@ -9,7 +9,8 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-
+using Microsoft.Azure.Documents.Client;
+using Microsoft.Azure.Documents.Linq;
 namespace frontend_api
 {
     public static class GetTransactions
@@ -19,7 +20,7 @@ namespace frontend_api
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "transactions/{accountId}")] HttpRequest req,
             [CosmosDB(
                 databaseName: "%CosmosDBDatabase%",
-                collectionName: "accounts",
+                collectionName: "transactions",
                 ConnectionStringSetting = "CosmosDBConnection",
                 SqlQuery = "select * from c where c.accountId = {accountId}")]
                 IEnumerable<Transaction> transactions,
