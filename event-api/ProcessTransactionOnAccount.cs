@@ -46,6 +46,7 @@ namespace event_api
                     decimal newBalance = account.GetPropertyValue<decimal>("balance") + t.amount;
                     account.SetPropertyValue("balance", newBalance);
                     
+                    documentUri = UriFactory.CreateDocumentCollectionUri(databaseName, collectionName);
                     await client.UpsertDocumentAsync(documentUri, account, new RequestOptions { PartitionKey = new PartitionKey(t.accountId) });
                     log.LogInformation($"Account(post): {JsonConvert.SerializeObject(account)}");
                     await Task.Yield();

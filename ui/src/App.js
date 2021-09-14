@@ -20,11 +20,11 @@ function App({msalInstance}) {
             </Col>
           </Row>
         </Container>
-        <MsalTest></MsalTest>
+        {/* <MsalTest></MsalTest>
         <pre>
 
           { JSON.stringify(msalInstance, null, 2) }
-        </pre>
+        </pre> */}
         <button onClick={() => msalInstance.logoutRedirect({ postLogoutRedirectUri: "/" })}>Sign out</button>
       </AuthenticatedTemplate>
 
