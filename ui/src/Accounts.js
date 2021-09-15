@@ -78,9 +78,9 @@ function Accounts() {
                         <Modal.Body>
                             <fieldset>
                                 <legend style={ { display: "none"}}>New Account:</legend>
-                                <label>Type: <select onChange={handleTypeChange}>
-                                    <option selected={(createAccount.type === 'Checking')}>Checking</option>
-                                    <option selected={(createAccount.type === 'Savings')}>Savings</option>
+                                <label>Type: <select value={createAccount.type} onChange={handleTypeChange}>
+                                    <option>Checking</option>
+                                    <option>Savings</option>
                                 </select></label>
                                 <label>Initial Balance: <input type="text" name="balance" onChange={handleBalanceChange} value={createAccount.balance} /></label>
                             </fieldset>
@@ -97,6 +97,9 @@ function Accounts() {
                         })}
                     </div>
                 </Col>
+            </Row>
+            <Row>
+                <Col><p style={{ fontSize: ".8em", color: "#333333"}}>* Please note that there is no real monetary transaction taking place in this application.</p></Col>
             </Row>
         </Container>
     )

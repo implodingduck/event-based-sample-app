@@ -104,9 +104,9 @@ function Account( {account, refreshAccounts} ) {
                         <fieldset>
                             <legend style={ { display: "none"}}>Transaction:</legend>
                             <label>Description: <input type="text" name="description" value={transaction.description} onChange={handleDescriptionChange}/></label>
-                            <label>Action: <select name="type" onChange={handleActionChange}>
-                                <option selected={(transaction.action === 'Deposit')}>Deposit</option>
-                                <option selected={(transaction.action === 'Withdraw')}>Withdraw</option>
+                            <label>Action: <select name="type" value={transaction.action} onChange={handleActionChange}>
+                                <option>Deposit</option>
+                                <option>Withdraw</option>
                             </select></label>
                             <label>Amount:<input type="text" name="amount" value={transaction.amount} onChange={handleAmountChange} /></label>
                         </fieldset>
