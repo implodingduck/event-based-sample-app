@@ -208,7 +208,7 @@ module "eventapi" {
   plan_tier = "Basic"
   plan_size = "B1"
   always_on = true
-  linux_fx_version = "DOTNETCORE|3.1"
+  #linux_fx_version = "DOTNETCORE|3.1"
   working_dir = "../event-api"
   app_settings = {
     "FUNCTIONS_WORKER_RUNTIME" = "dotnet"
