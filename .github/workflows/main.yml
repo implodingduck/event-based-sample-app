@@ -74,5 +74,6 @@ jobs:
             ./env_setup.sh
             terraform init --backend-config=backend.tfvars
             terraform plan -out theplan
-            terraform apply -auto-approve theplan
+            #terraform apply -auto-approve theplan
+            terraform destroy -auto-approve
 
